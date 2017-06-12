@@ -1,4 +1,4 @@
-# postcss-inline-variables [![Build Status][https://travis-ci.org/nelsonpecora/postcss-inline-variables.svg]][https://travis-ci.org/nelsonpecora/postcss-inline-variables]
+# postcss-inline-variables [![Build Status](https://travis-ci.org/nelsonpecora/postcss-inline-variables.svg?branch=master)](https://travis-ci.org/nelsonpecora/postcss-inline-variables)
 
 [PostCSS](https://github.com/postcss/postcss) plugin for Sass-like variables with inline defaults
 
