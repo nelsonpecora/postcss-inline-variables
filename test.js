@@ -27,6 +27,10 @@ describe('inline-variables', () => {
     return runWithErrors('a { color: $color; }', 'inline-variables: /foo/bar.css:1:5: $color not defined!');
   });
 
+  it('passes through non-variable styles', () => {
+    return run('a { content: "$1"; }', 'a { content: "$1"; }');
+  });
+
   // requirePrefix
 
   it('errors if unprefixed hoisted default when file prefix is required', () => {
