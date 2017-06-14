@@ -33,7 +33,7 @@ const inlineVariables = require('postcss-inline-variables'),
   };
 
 postcss([inlineVariables(myVariables)])
-  .process(styles)
+  .process(css)
   .then((result) => {
     console.log(result.css); // → styles that use the variables!
   })
@@ -63,7 +63,7 @@ The `$color` variable will throw an error if you set `requirePrefix: 'file'`:
 
 ```js
 postcss([inlineVariables(myVariables, { requirePrefix: 'file' })])
-  .process(styles)
+  .process(css)
   .catch((e) => {
     console.log(e.message); // → 'No prefix for $color in components/foo.css! Should it be $foo-color?'
   });
@@ -73,7 +73,7 @@ The same behavior can be used at the folder level, e.g. `components/foo/styles.c
 
 ```js
 postcss([inlineVariables(myVariables, { requirePrefix: 'folder' })])
-  .process(styles)
+  .process(css)
   .catch((e) => {
     console.log(e.message); // → 'No prefix for $color in components/foo/styles.css! Should it be $foo-color?'
   });
@@ -99,7 +99,7 @@ For example, `$color: #000` will throw an error if you set `requireDefault: 'fla
 
 ```js
 postcss([inlineVariables(myVariables, { requireDefault: 'flag' })])
-  .process(styles)
+  .process(css)
   .catch((e) => {
     console.log(e.message); // → 'No !default flag set for $color!'
   });
@@ -108,7 +108,7 @@ This can also be used to disable hoisted variable definitions entirely, requirin
 
 ```js
 postcss([inlineVariables(myVariables, { requireDefault: 'inline' })])
-  .process(styles)
+  .process(css)
   .catch((e) => {
     console.log(e.message); // → 'Illegal hoisted variable $color! Use "$color or value"'
   });
@@ -118,7 +118,7 @@ Alternatively, you can specify the exact opposite behavior, requiring _all_ vari
 
 ```js
 postcss([inlineVariables(myVariables, { requireDefault: 'hoisted' })])
-  .process(styles)
+  .process(css)
   .catch((e) => {
     console.log(e.message); // → 'Illegal inline variable $color! Use "$color: value !default"'
   });
