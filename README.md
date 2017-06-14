@@ -42,6 +42,16 @@ postcss([inlineVariables(myVariables)])
   });
 ```
 
+The variables you define will be applied to the styles, which will fall back to using their defaults!
+
+```css
+.title {
+  background-color: #fff;
+  color: #000;
+  flex-flow: column wrap;
+}
+```
+
 _Note:_ It might be useful to use [postcss-get-sass-variables](https://github.com/nelsonpecora/postcss-get-sass-variables) to extract them from other css files, if you organize your styleguides purely in css.
 
 # Options
