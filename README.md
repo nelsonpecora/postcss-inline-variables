@@ -101,7 +101,7 @@ For example, `$color: #000` will throw an error if you set `requireDefault: 'fla
 postcss([inlineVariables(myVariables, { requireDefault: 'flag' })])
   .process(styles)
   .catch((e) => {
-    console.log(e.message); // → 'No !default flag set for $color in foo.css!'
+    console.log(e.message); // → 'No !default flag set for $color!'
   });
 ```
 This can also be used to disable hoisted variable definitions entirely, requiring developers to write all of their variables inline in the form of `$var or value`:
@@ -110,7 +110,7 @@ This can also be used to disable hoisted variable definitions entirely, requirin
 postcss([inlineVariables(myVariables, { requireDefault: 'inline' })])
   .process(styles)
   .catch((e) => {
-    console.log(e.message); // → 'Illegal hoisted variable $color in foo.css! Use "$color or value"'
+    console.log(e.message); // → 'Illegal hoisted variable $color! Use "$color or value"'
   });
 ```
 
@@ -120,6 +120,6 @@ Alternatively, you can specify the exact opposite behavior, requiring _all_ vari
 postcss([inlineVariables(myVariables, { requireDefault: 'hoisted' })])
   .process(styles)
   .catch((e) => {
-    console.log(e.message); // → 'Illegal inline variable $color in foo.css! Use "$color: value !default"'
+    console.log(e.message); // → 'Illegal inline variable $color! Use "$color: value !default"'
   });
 ```
