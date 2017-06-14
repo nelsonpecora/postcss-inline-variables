@@ -14,6 +14,7 @@ function run(input, output, variables, options) {
 function runWithErrors(input, error, variables, options) {
   return postcss([lib(variables, options)]).process(input, { from: '/foo/bar.css', to: '/foo/bar.css' })
     .then(() => {
+      /* istanbul ignore next */
       throw new Error('No errors caught!');
     })
     .catch((e) => {
@@ -50,6 +51,22 @@ describe('inline-variables', () => {
 
   it('errors if unprefixed inline default when folder prefix is required', () => {
     return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:5: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
+  });
+
+  it('does not error if prefixed hoisted variable when file prefix is required', () => {
+    return run('$bar-color: red;', '', {}, { requirePrefix: 'file' });
+  });
+
+  it('does not error if prefixed hoisted variable when folder prefix is required', () => {
+    return run('$foo-color: red;', '', {}, { requirePrefix: 'folder' });
+  });
+
+  it('does not error if prefixed inline variable when file prefix is required', () => {
+    return run('a { color: $bar-color or red; }', 'a { color: red; }', {}, { requirePrefix: 'file' });
+  });
+
+  it('does not error if prefixed inline variable when folder prefix is required', () => {
+    return run('a { color: $foo-color or red; }', 'a { color: red; }', {}, { requirePrefix: 'folder' });
   });
 
   // requireDefault

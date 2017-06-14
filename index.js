@@ -9,12 +9,12 @@ const postcss = require('postcss'),
  * @return {string|null}
  */
 function getRequiredPrefix(filepath, requirePrefix) {
-  if (!requirePrefix) {
-    return null;
-  } else if (requirePrefix === 'file') {
+  if (requirePrefix === 'file') {
     return path.basename(filepath, path.extname(filepath));
   } else if (requirePrefix === 'folder') {
     return _.last(path.dirname(filepath).split(path.sep));
+  } else {
+    return null;
   }
 }
 
@@ -63,11 +63,11 @@ function checkPrefix(node, prefix) {
 
   if (prefix) {
     // there is a prefix to check, so make sure all the variables in this declaration use it!
-    const regex = new RegExp(`\$${prefix}\-.*?$`, 'i');
+    const regex = new RegExp(`^${prefix}\-.*?$`);
 
     _.each(variableNames, (name) => {
       if (!name.match(regex)) {
-        throw node.error(`No prefix for $${name}! Should it be $${prefix}-${name}?`, { word: name })
+        throw node.error(`No prefix for $${name}! Should it be $${prefix}-${name}?`, { word: name });
       }
     });
   }
@@ -159,7 +159,7 @@ function getInlineDefaults(node) {
   return _.reduce(matches, (result, match) => {
     const parts = match.match(inlineDefaultRegex);
 
-    return _.assign(result, { [parts[1]]: parts[2] })
+    return _.assign(result, { [parts[1]]: parts[2] });
   }, {});
 }
 
@@ -179,7 +179,7 @@ function handleInlineDefaults(node, variableDefaults, prefix, requireDefault) {
     throw node.error(`Illegal inline variable $${firstProp}! Use "$${firstProp}: value !default"`, { word: firstProp });
   } else {
     checkPrefix(node, prefix);
-    _.assign(variableDefaults, found)
+    _.assign(variableDefaults, found);
   }
 }
 
@@ -202,7 +202,7 @@ function replaceValues(node, variables, variableDefaults) {
     } else if (variableDefaults[variable]) {
       return str.replace(match, variableDefaults[variable]);
     } else {
-      throw node.error(`$${variable} not defined!`, { word: variable })
+      throw node.error(`$${variable} not defined!`, { word: variable });
     }
   }, node.value);
 
@@ -220,7 +220,7 @@ function removeHoistedDefinitions(node) {
 }
 
 module.exports = postcss.plugin('inline-variables', (variables = {}, options = {}) => {
-  return (root, result) => {
+  return (root) => {
     const filepath = _.get(root, 'source.input.file'),
       prefix = getRequiredPrefix(filepath, options.requirePrefix);
 
@@ -244,6 +244,6 @@ module.exports = postcss.plugin('inline-variables', (variables = {}, options = {
 
       // if the node is a hoisted definition, remove it
       removeHoistedDefinitions(node);
-    })
+    });
   };
 });
