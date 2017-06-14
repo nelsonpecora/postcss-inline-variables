@@ -1,5 +1,7 @@
 # postcss-inline-variables [![Build Status](https://travis-ci.org/nelsonpecora/postcss-inline-variables.svg?branch=master)](https://travis-ci.org/nelsonpecora/postcss-inline-variables)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/nelsonpecora/postcss-inline-variables.svg)](https://greenkeeper.io/)
+
 [PostCSS](https://github.com/postcss/postcss) plugin for Sass-like variables with inline defaults
 
 # Installation
