@@ -24,7 +24,7 @@ function runWithErrors(input, error, variables, options) {
 
 describe('inline-variables', () => {
   it('errors if no default value for a variable', () => {
-    return runWithErrors('a { color: $color; }', 'inline-variables: /foo/bar.css:1:5: $color not defined!');
+    return runWithErrors('a { color: $color; }', 'inline-variables: /foo/bar.css:1:12: $color not defined!');
   });
 
   it('passes through non-variable styles', () => {
@@ -34,27 +34,27 @@ describe('inline-variables', () => {
   // requirePrefix
 
   it('errors if unprefixed hoisted default when file prefix is required', () => {
-    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:2: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
+    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:1: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
   });
 
   it('errors if unprefixed hoisted default when folder prefix is required', () => {
-    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:2: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
+    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:1: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
   });
 
   it('errors if unprefixed hoisted variable when file prefix is required', () => {
-    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:2: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
+    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:1: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
   });
 
   it('errors if unprefixed hoisted variable when folder prefix is required', () => {
-    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:2: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
+    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:1: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
   });
 
   it('errors if unprefixed inline default when file prefix is required', () => {
-    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:5: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
+    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:12: No prefix for $color! Should it be $bar-color?', {}, { requirePrefix: 'file' });
   });
 
   it('errors if unprefixed inline default when folder prefix is required', () => {
-    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:5: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
+    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:12: No prefix for $color! Should it be $foo-color?', {}, { requirePrefix: 'folder' });
   });
 
   it('does not error if prefixed hoisted variable when file prefix is required', () => {
@@ -76,23 +76,23 @@ describe('inline-variables', () => {
   // requireDefault
 
   it('errors if unflagged hoisted variable when !default flag is required', () => {
-    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:2: No !default flag set for $color!', {}, { requireDefault: 'flag' });
+    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:1: No !default flag set for $color!', {}, { requireDefault: 'flag' });
   });
 
   it('errors if hoisted default when hoisting is disabled', () => {
-    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:2: Illegal hoisted variable $color! Use "$color or value"', {}, { requireDefault: 'inline' });
+    return runWithErrors('$color: red !default;', 'inline-variables: /foo/bar.css:1:1: Illegal hoisted variable $color! Use "$color or value"', {}, { requireDefault: 'inline' });
   });
 
   it('errors if hoisted variable when hoisting is disabled', () => {
-    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:2: Illegal hoisted variable $color! Use "$color or value"', {}, { requireDefault: 'inline' });
+    return runWithErrors('$color: red;', 'inline-variables: /foo/bar.css:1:1: Illegal hoisted variable $color! Use "$color or value"', {}, { requireDefault: 'inline' });
   });
 
   it('errors if inline default when hoisting is required', () => {
-    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:5: Illegal inline variable $color! Use "$color: value !default"', {}, { requireDefault: 'hoisted' });
+    return runWithErrors('a { color: $color or red; }', 'inline-variables: /foo/bar.css:1:12: Illegal inline variable $color! Use "$color: value !default"', {}, { requireDefault: 'hoisted' });
   });
 
   it('errors if inline grouped default when hoisting is required', () => {
-    return runWithErrors('a { border: [$width or 1px] solid [$color or black]; }', 'inline-variables: /foo/bar.css:1:15: Illegal inline variable $width! Use "$width: value !default"', {}, { requireDefault: 'hoisted' });
+    return runWithErrors('a { border: [$width or 1px] solid [$color or black]; }', 'inline-variables: /foo/bar.css:1:14: Illegal inline variable $width! Use "$width: value !default"', {}, { requireDefault: 'hoisted' });
   });
 
   // variable replacement

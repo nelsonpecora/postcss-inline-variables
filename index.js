@@ -3,6 +3,18 @@ const postcss = require('postcss'),
   path = require('path');
 
 /**
+ * get index of a variables, for error messages
+ * @param  {object} node
+ * @param  {string} word
+ * @return {number}
+ */
+function getIndex(node, word) {
+  const index = node.toString().indexOf(word) - 1;
+
+  return index > 0 ? index : 0;
+}
+
+/**
  * get required prefix, based on option
  * @param  {string} filepath
  * @param  {string|undefined} requirePrefix
@@ -67,7 +79,7 @@ function checkPrefix(node, prefix) {
 
     _.each(variableNames, (name) => {
       if (!name.match(regex)) {
-        throw node.error(`No prefix for $${name}! Should it be $${prefix}-${name}?`, { word: name });
+        throw node.error(`No prefix for $${name}! Should it be $${prefix}-${name}?`, { word: `$${name}`, index: getIndex(node, name) });
       }
     });
   }
@@ -97,7 +109,7 @@ function handleHoistedDefault(node, variableDefaults, prefix, requireDefault) {
     prop = found && Object.keys(found)[0];
 
   if (_.size(found) && requireDefault === 'inline') {
-    throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: prop });
+    throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: `$${prop}`, index: getIndex(node, prop) });
   } else {
     checkPrefix(node, prefix);
     _.assign(variableDefaults, found);
@@ -127,9 +139,9 @@ function handleHoistedVariable(node, variables, prefix, requireDefault) {
     prop = found && Object.keys(found)[0];
 
   if (_.size(found) && requireDefault === 'flag') {
-    throw node.error(`No !default flag set for $${prop}!`, { word: prop });
+    throw node.error(`No !default flag set for $${prop}!`, { word: `$${prop}`, index: getIndex(node, prop) });
   } else if (_.size(found) && requireDefault === 'inline') {
-    throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: prop });
+    throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: `$${prop}`, index: getIndex(node, prop) });
   } else {
     checkPrefix(node, prefix);
     _.assign(variables, found);
@@ -176,7 +188,7 @@ function handleInlineDefaults(node, variableDefaults, prefix, requireDefault) {
   if (_.size(found) && requireDefault === 'hoisted') {
     const firstProp = Object.keys(found)[0]; // we only need to look at the first item
 
-    throw node.error(`Illegal inline variable $${firstProp}! Use "$${firstProp}: value !default"`, { word: firstProp });
+    throw node.error(`Illegal inline variable $${firstProp}! Use "$${firstProp}: value !default"`, { word: `$${firstProp}`, index: getIndex(node, firstProp) });
   } else {
     checkPrefix(node, prefix);
     _.assign(variableDefaults, found);
@@ -202,7 +214,7 @@ function replaceValues(node, variables, variableDefaults) {
     } else if (variableDefaults[variable]) {
       return str.replace(match, variableDefaults[variable]);
     } else {
-      throw node.error(`$${variable} not defined!`, { word: variable });
+      throw node.error(`$${variable} not defined!`, { word: `$${variable}`, index: getIndex(node, variable) });
     }
   }, node.value);
 
