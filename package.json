@@ -26,7 +26,7 @@
   "homepage": "https://github.com/nelsonpecora/postcss-inline-variables#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "postcss": "^6.0.2"
+    "postcss": "^7.0.9"
   },
   "devDependencies": {
     "chai": "^4.0.2",
