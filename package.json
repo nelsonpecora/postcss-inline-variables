@@ -1,6 +1,6 @@
 {
   "name": "postcss-inline-variables",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "PostCSS plugin for Sass-like variables with inline defaults",
   "main": "index.js",
   "scripts": {
