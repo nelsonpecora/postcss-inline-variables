@@ -98,6 +98,34 @@ function getHoistedDefault(node) {
 }
 
 /**
+ * Get the value of a variable, which may reference an already-defined variable.
+ * @param {string} found value or $variable
+ * @param {object} variables or variableDefaults
+ * @return {string}
+ */
+function getVariableAssignment(found, variables) {
+  const key = Object.keys(found)[0],
+    valueOrReferencedVariable = found[key];
+
+  if (!key || !valueOrReferencedVariable) {
+    return null;
+  }
+
+  let value = valueOrReferencedVariable;
+
+  if (valueOrReferencedVariable.includes('$')) {
+    const referencedVariable = valueOrReferencedVariable.replace('$', ''),
+      referencedValue = variables[referencedVariable];
+
+    value = referencedValue;
+  }
+
+  return value ? {
+    [key]: value
+  } : null;
+}
+
+/**
  * handle hoisted default variables
  * @param  {object} node
  * @param  {object} variableDefaults
@@ -112,7 +140,7 @@ function handleHoistedDefault(node, variableDefaults, prefix, requireDefault) {
     throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: `$${prop}`, index: getIndex(node, prop) });
   } else {
     checkPrefix(node, prefix);
-    _.assign(variableDefaults, found);
+    _.assign(variableDefaults, getVariableAssignment(found, variableDefaults));
   }
 }
 
@@ -144,7 +172,7 @@ function handleHoistedVariable(node, variables, prefix, requireDefault) {
     throw node.error(`Illegal hoisted variable $${prop}! Use "$${prop} or value"`, { word: `$${prop}`, index: getIndex(node, prop) });
   } else {
     checkPrefix(node, prefix);
-    _.assign(variables, found);
+    _.assign(variables, getVariableAssignment(found, variables));
   }
 }
 

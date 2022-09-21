@@ -1,4 +1,4 @@
-'use strict';
+
 const postcss = require('postcss'),
   _ = require('lodash'),
   lib = require('./');
@@ -135,6 +135,24 @@ describe('inline-variables', () => {
 
   it('does not overwrite grouped hoisted variable', () => {
     return run('$width: 1px;\na { border: $width solid [$color or black]; }', 'a { border: 1px solid green; }', { width: '2px', color: 'green' });
+  });
+
+  // variable assignment
+
+  it('allows assigning variables to other variables', () => {
+    return run('$a: #fff;\n$b: $a;\na { color: $b; }', 'a { color: #fff; }');
+  });
+
+  it('does not overwrite assigned variables', () => {
+    return run('$a: #fff;\n$b: $a;\na { color: $b; }', 'a { color: #fff; }', { b: '#000' });
+  });
+
+  it('overwrites assigned variables referencing defaults', () => {
+    return run('$a: #fff !default;\n$b: $a;\na { color: $b; }', 'a { color: #000; }', { b: '#000' });
+  });
+
+  it('overwrites default assigned variables', () => {
+    return run('$a: #fff;\n$b: $a !default;\na { color: $b; }', 'a { color: #000; }', { b: '#000' });
   });
 
   // some fun edge cases

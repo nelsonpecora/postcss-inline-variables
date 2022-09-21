@@ -133,3 +133,9 @@ postcss([inlineVariables(myVariables, { requireDefault: 'hoisted' })])
     console.log(e.message); // → 'Illegal inline variable $color! Use "$color: value !default"'
   });
 ```
+
+# Contributing
+
+This plugin is in a stable state, and doesn't get updates frequently. If you'd like to add a feature or fix a bug, please make a pull request!
+
+You can install dependencies with `npm install` once you've cloned the repo, and run tests with `npm test`.
